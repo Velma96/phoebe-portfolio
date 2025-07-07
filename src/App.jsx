@@ -1,25 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import About from "./components/About";
-import Projects from "./components/Projects";
-import Skills from "./components/Skills";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-import ProjectModal from "./components/ProjectModal";
 import ParticlesBackground from "./particles";
-import { lazy, Suspense } from "react";
+import ProjectModal from "./components/ProjectModal";
 
 const Projects = lazy(() => import("./components/Projects"));
 const Skills = lazy(() => import("./components/Skills"));
 const Contact = lazy(() => import("./components/Contact"));
-
-// In App.jsx
-<Suspense fallback={<div>Loading...</div>}>
-  <Projects filter={filter} setFilter={setFilter} setModalProject={setModalProject} />
-  <Skills />
-  <Contact />
-</Suspense>
+const Footer = lazy(() => import("./components/Footer"));
 
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem("theme") === "dark");
@@ -45,10 +35,12 @@ export default function App() {
       >
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <About />
-        <Projects filter={filter} setFilter={setFilter} setModalProject={setModalProject} />
-        <Skills />
-        <Contact />
-        <Footer />
+        <Suspense fallback={<div className="text-center text-white">Loading...</div>}>
+          <Projects filter={filter} setFilter={setFilter} setModalProject={setModalProject} />
+          <Skills />
+          <Contact />
+          <Footer />
+        </Suspense>
         <ProjectModal modalProject={modalProject} setModalProject={setModalProject} />
       </motion.div>
     </div>

@@ -13,11 +13,17 @@ export default function Navbar({ isDarkMode, setIsDarkMode, isMenuOpen, setIsMen
   return (
     <nav className="bg-white dark:bg-gray-800 shadow sticky top-0 z-40" role="navigation" aria-label="Main Navigation">
       <div className="container mx-auto flex justify-between items-center px-6 py-4">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Phoebe Velma</h1>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Phoebe Velma
+        </h1>
         <ul className="hidden md:flex space-x-6">
           {["about", "projects", "skills", "contact"].map((section) => (
             <li key={section}>
-              <a href={`#${section}`} className="hover:text-blue-500 text-gray-800 dark:text-white transition">
+              <a
+                href={`#${section}`}
+                className="hover:text-blue-500 text-gray-800 dark:text-white transition"
+                aria-label={`Navigate to ${section} section`}
+              >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
               </a>
             </li>
@@ -27,14 +33,15 @@ export default function Navbar({ isDarkMode, setIsDarkMode, isMenuOpen, setIsMen
           ref={setReferenceElement}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden text-xl text-blue-600 dark:text-white focus:outline-none px-2 py-1"
-          aria-label="Toggle Menu"
+          aria-label="Toggle Mobile Menu"
+          aria-expanded={isMenuOpen}
         >
           ☰
         </button>
         <button
           onClick={() => setIsDarkMode(!isDarkMode)}
           className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm px-3 py-1 rounded-full shadow hover:scale-105 transition absolute top-4 right-4"
-          aria-label="Toggle Dark Mode"
+          aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode`}
         >
           {isDarkMode ? "☀️" : "🌙"}
         </button>
@@ -47,6 +54,8 @@ export default function Navbar({ isDarkMode, setIsDarkMode, isMenuOpen, setIsMen
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="md:hidden bg-white dark:bg-gray-800 px-6 py-4 space-y-2 shadow-lg rounded-lg"
+          role="menu"
+          aria-label="Mobile Navigation Menu"
         >
           {["about", "projects", "skills", "contact"].map((section) => (
             <a
@@ -54,6 +63,8 @@ export default function Navbar({ isDarkMode, setIsDarkMode, isMenuOpen, setIsMen
               href={`#${section}`}
               className="block hover:text-blue-500 text-gray-800 dark:text-white"
               onClick={() => setIsMenuOpen(false)}
+              role="menuitem"
+              aria-label={`Navigate to ${section} section`}
             >
               {section.charAt(0).toUpperCase() + section.slice(1)}
             </a>

@@ -1,14 +1,25 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useState } from "react";
 
 const projectsData = [
-  { id: "ajali", title: "Ajali! App", image: "/Ajali.png", description: "Real-time emergency reporting app built with React and Node.js.", tech: ["React", "Node.js"], link: "https://ajali-1-s5ar.onrender.com/" },
+  { id: "ajali", title: "Ajali! App", image: "/Ajali.png", description: "Real-time emergency reporting app built with React and Node.js.", tech: ["React", "Node.js"], link: "https://ajali-1-s5ar.onrender.com/", featured: true },
   { id: "spacer", title: "Spacer Platform", image: "/spacer.png", description: "Full-stack rental space platform with payment system using Django and PostgreSQL.", tech: ["Django", "PostgreSQL"], link: "https://spacer-platform-1.onrender.com/" },
   { id: "weather", title: "Weather Watchlite", image: "/weather.png", description: "Weather forecast dashboard built with HTML, Tailwind CSS, and JavaScript.", tech: ["HTML", "Tailwind", "JavaScript"], link: "https://weather-watch-lite-1-5aa2.onrender.com/" },
 ];
 
 export default function Projects({ filter, setModalProject }) {
   const { ref, inView } = useInView({ threshold: 0.1 });
+  const [currentFeatured, setCurrentFeatured] = useState(0);
+
+  const featuredProjects = projectsData.filter((p) => p.featured);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeatured((prev) => (prev + 1) % featuredProjects.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [featuredProjects.length]);
 
   return (
     <section id="projects" className="py-20 px-6">
@@ -20,6 +31,38 @@ export default function Projects({ filter, setModalProject }) {
       >
         Projects
       </motion.h2>
+      {featuredProjects.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12"
+        >
+          <h3 className="text-2xl font-semibold text-center mb-4 text-blue-400">Featured Project</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+            <motion.img
+              key={featuredProjects[currentFeatured].id}
+              src={featuredProjects[currentFeatured].image}
+              alt={featuredProjects[currentFeatured].title}
+              className="rounded mb-4 w-full h-64 object-cover"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              loading="lazy"
+            />
+            <h4 className="text-xl font-semibold mb-2">{featuredProjects[currentFeatured].title}</h4>
+            <p className="text-gray-500 dark:text-gray-300 mb-4">{featuredProjects[currentFeatured].description}</p>
+            <a
+              href={featuredProjects[currentFeatured].link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:from-purple-700 hover:to-blue-700 transition"
+            >
+              View Live
+            </a>
+          </div>
+        </motion.div>
+      )}
       <div className="flex justify-center mb-8 space-x-4">
         {["All", "React", "Django", "JavaScript"].map((tech) => (
           <motion.button
